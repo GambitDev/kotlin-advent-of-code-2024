@@ -40,8 +40,8 @@ fun main() {
     check(part1(testInput) == 2)
     check(part2(testInput) == 4)
 
-    // Read the input from the `src/Day02.txt` file.
-    val input = readInput("day_02/Day02")
+    // Read the input from the `src/day_02/Day02.txt` file.
+    val input = readInput(dir = "day_02", name = "Day02")
     part1(input).println()
     part2(input).println()
 }

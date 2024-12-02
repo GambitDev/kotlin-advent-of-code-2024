@@ -61,8 +61,8 @@ fun main() {
     check(part1(testInput) == 11)
     check(part2(testInput) == 31)
 
-    // Read the input from the `src/Day01.txt` file.
-    val input = readInput("day_01/Day01")
+    // Read the input from the `src/day_01/Day01.txt` file.
+    val input = readInput(dir = "day_01", name = "Day01")
     part1(input).println()
     part2(input).println()
 }
