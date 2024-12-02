@@ -1,3 +1,7 @@
+package day_01
+
+import println
+import readInput
 import kotlin.math.abs
 
 fun main() {
@@ -58,7 +62,7 @@ fun main() {
     check(part2(testInput) == 31)
 
     // Read the input from the `src/Day01.txt` file.
-    val input = readInput("Day01")
+    val input = readInput("day_01/Day01")
     part1(input).println()
     part2(input).println()
 }
