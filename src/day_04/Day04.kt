@@ -18,49 +18,110 @@ fun main() {
     """.trimIndent().split("\n")
 
     fun part1(input: List<String>): Int {
-        val regexXmas = Regex("XMAS")
-        val regexSamx = Regex("SAMX")
+        var times = 0
 
-        // Search for horizontal appearances ("XMAS" and "SAMX")
-        val horizontalCount = input.sumOf { line ->
-            regexXmas.findAll(line).count() + regexSamx.findAll(line).count()
+        // search for horizontal appearances (XMAS)
+        input.forEach { line ->
+            val regex = Regex("XMAS")
+            times += regex.findAll(line).toList().size
         }
 
-        // Search for vertical appearances
-        val verticalCount = (0 until input[0].length).sumOf { col ->
-            (0..input.size - 4).count { row ->
-                input[row][col] == 'X' && input[row + 1][col] == 'M' && input[row + 2][col] == 'A' && input[row + 3][col] == 'S'
-            } + (3 until input.size).count { row ->
-                input[row][col] == 'X' && input[row - 1][col] == 'M' && input[row - 2][col] == 'A' && input[row - 3][col] == 'S'
+        // search for backward appearances (SAMX)
+        input.forEach { line ->
+            val regex = Regex("SAMX")
+            times += regex.findAll(line).toList().size
+        }
+
+        // search for vertical appearances (going down)
+        for (i in 0..input.size - 4) {
+            val line = input[i]
+            for (j in line.indices) {
+                if (line[j] == 'X') {
+                    if (input[i + 1][j] == 'M' && input[i + 2][j] == 'A' && input[i + 3][j] == 'S') {
+                        times++
+                    }
+                }
             }
         }
 
-        // Search for diagonal appearances
-        val diagonalCount = (0..input.size - 4).sumOf { row ->
-            (0..input[0].length - 4).count { col ->
-                input[row][col] == 'X' && input[row + 1][col + 1] == 'M' && input[row + 2][col + 2] == 'A' && input[row + 3][col + 3] == 'S'
-            } + (3 until input[0].length).count { col ->
-                input[row][col] == 'X' && input[row + 1][col - 1] == 'M' && input[row + 2][col - 2] == 'A' && input[row + 3][col - 3] == 'S'
-            }
-        } + (3 until input.size).sumOf { row ->
-            (0..input[0].length - 4).count { col ->
-                input[row][col] == 'X' && input[row - 1][col + 1] == 'M' && input[row - 2][col + 2] == 'A' && input[row - 3][col + 3] == 'S'
-            } + (3 until input[0].length).count { col ->
-                input[row][col] == 'X' && input[row - 1][col - 1] == 'M' && input[row - 2][col - 2] == 'A' && input[row - 3][col - 3] == 'S'
+        // search for vertical appearances (going up)
+        for (i in input.size - 1 downTo 3) {
+            val line = input[i]
+            for (j in line.indices) {
+                if (line[j] == 'X') {
+                    if (input[i - 1][j] == 'M' && input[i - 2][j] == 'A' && input[i - 3][j] == 'S') {
+                        times++
+                    }
+                }
             }
         }
 
-        return horizontalCount + verticalCount + diagonalCount
+        // diagonal
+        for (i in 0..input.size - 4) {
+            val line = input[i]
+            for (j in 0..line.length - 3) {
+                if (line[j] == 'X') {
+                    if (input[i + 1][j + 1] == 'M' && input[i + 2][j + 2] == 'A' && input[i + 3][j + 3] == 'S') {
+                        times++
+                    }
+                }
+            }
+        }
+
+        // diagonal
+        for (i in input.size - 1 downTo 3) {
+            val line = input[i]
+            for (j in line.length - 1 downTo 3) {
+                if (line[j] == 'X') {
+                    if (input[i - 1][j - 1] == 'M' && input[i - 2][j - 2] == 'A' && input[i - 3][j - 3] == 'S') {
+                        times++
+                    }
+                }
+            }
+        }
+
+        // diagonal
+        for (i in 0..input.size - 4) {
+            val line = input[i]
+            for (j in line.length - 1 downTo 3) {
+                if (line[j] == 'X') {
+                    if (input[i + 1][j - 1] == 'M' && input[i + 2][j - 2] == 'A' && input[i + 3][j - 3] == 'S') {
+                        times++
+                    }
+                }
+            }
+        }
+
+        // diagonal
+        for (i in input.size - 1 downTo 3) {
+            val line = input[i]
+            for (j in 0..line.length - 3) {
+                if (line[j] == 'X') {
+                    if (input[i - 1][j + 1] == 'M' && input[i - 2][j + 2] == 'A' && input[i - 3][j + 3] == 'S') {
+                        times++
+                    }
+                }
+            }
+        }
+
+        return times
     }
 
     fun part2(input: List<String>): Int {
-        return (1 until input.size - 1).sumOf { row ->
-            (1 until input[row].length - 1).count { col ->
-                input[row][col] == 'A' &&
-                        ((input[row - 1][col - 1] == 'M' && input[row + 1][col + 1] == 'S') || (input[row - 1][col - 1] == 'S' && input[row + 1][col + 1] == 'M')) &&
-                        ((input[row - 1][col + 1] == 'M' && input[row + 1][col - 1] == 'S') || (input[row - 1][col + 1] == 'S' && input[row + 1][col - 1] == 'M'))
+        var times = 0
+        for (i in 1 until input.size - 1) {
+            for (j in 1 until input[i].length - 1) {
+                if (input[i][j] == 'A') {
+                    if (input[i - 1][j - 1] == 'M' && input[i + 1][j + 1] == 'S' || input[i - 1][j - 1] == 'S' && input[i + 1][j + 1] == 'M') {
+                        if (input[i - 1][j + 1] == 'M' && input[i + 1][j - 1] == 'S' || input[i - 1][j + 1] == 'S' && input[i + 1][j - 1] == 'M') {
+                            times++
+                        }
+                    }
+                }
             }
         }
+
+        return times
     }
 
     // Test if implementation meets criteria from the description, like:
